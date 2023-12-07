@@ -8,6 +8,8 @@ import seaborn as sns
 
 df_wdbc = pd.read_csv('wdbc.csv', sep=',')
 
+df_wdbc['ID'] = df_wdbc['ID'].astype('object')
+
 df_wdbc.describe().T
 
 df_wdbc.info()
@@ -56,6 +58,20 @@ sns.boxplot(x='Diagnosis', y='fractal_dimension2', data=df_wdbc)
 sns.boxplot(x='Diagnosis', y='fractal_dimension3', data=df_wdbc)
 
 
+# Generar imágenes de distribución de datos
+sns.histplot(df_wdbc['fractal_dimension1'], kde=True)
+plt.title('Distribución de radius1')
+plt.show()
+
+
+# Pairplot de todas las variables cuantitativas 
+selected_vars = df_wdbc.drop('ID', axis=1)
+sns.pairplot(selected_vars, hue='Diagnosis')
+plt.suptitle('Pairplot de variables seleccionadas', y=1.02)
+plt.show()
+
+
+# Revisión de Correlaciones por grupo. 
 FLOAT_COLUMNS: list[str] = ['radius1', 'texture1', 'perimeter1', 'area1',
                             'smoothness1', 'compactness1', 'concavity1', 'concave_points1',
                             'symmetry1', 'fractal_dimension1', 'radius2', 'texture2', 'perimeter2',
@@ -68,6 +84,6 @@ df_wdbc_m = df_wdbc[df_wdbc['Diagnosis'] == 'M']
 
 df_wdbc_b = df_wdbc[df_wdbc['Diagnosis'] == 'B']
 
-df_wdbc_m[FLOAT_COLUMNS].corr().to_csv('correlaciones_m.csv', sep=',')
+df_wdbc_m[FLOAT_COLUMNS].corr().to_csv('docs/correlaciones_m.csv', sep=',')
 
-df_wdbc_b[FLOAT_COLUMNS].corr().to_csv('correlaciones_b.csv', sep=',')
+df_wdbc_b[FLOAT_COLUMNS].corr().to_csv('docs/correlaciones_b.csv', sep=',')
